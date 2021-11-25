@@ -16,7 +16,7 @@ public class Quiz {
 
     private String subject;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "selectors",
             joinColumns = @JoinColumn(name = "quizId", referencedColumnName = "id"),

@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import quiz.dao.QuestionDAO;
@@ -12,6 +13,8 @@ import quiz.dao.QuizDAO;
 import quiz.dao.ResultDAO;
 import quiz.dao.UserDAO;
 import quiz.entities.User;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -47,7 +50,20 @@ public class MyController {
     @GetMapping("/quiz")
     public String quiz(Model model,
                        @RequestParam Integer id) {
+        model.addAttribute("quiz", quizRepo.findById(id).get());
         return "quiz";
 
+    }
+
+    @PostMapping("/quiz_submit")
+    public String quizEvaluation(Model model,
+                                 @RequestParam Integer quizId,
+                                 @RequestParam Map<String, String> params){
+        //read the params
+        System.out.println(params);
+        //check the answers
+        //quizRepo.findById();
+        //save the result
+        return "Blabla";
     }
 }

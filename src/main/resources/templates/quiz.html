@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+</head>
+<body>
+    <p th:text="'Please anser the questions for the ' + ${quiz.subject} + '-Quiz'"></p>
+    <form th:action="@{/quiz_submit}" method="post">
+        <ul th:each="question : ${quiz.questions}">
+            <li>
+                <p th:text="${question.text}"></p>
+                <ul th:each="option, optionIndex : ${question.options.split('/')}">
+                    <li>
+                        <input type="checkbox" th:name="'checkedAnswer' + ${question.id} + '-' + ${optionIndex.index}" th:id="${optionIndex}"/>
+                        <label th:for="${optionIndex}" th:text="${option}"></label>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <input type="hidden" name="quizId" th:value="${quiz.id}"/>
+        <input type="submit" value="Submit"/>
+    </form>
+</body>
+</html>
