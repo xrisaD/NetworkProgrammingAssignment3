@@ -11,6 +11,7 @@ import quiz.dao.ResultDAO;
 import quiz.dao.UserDAO;
 import quiz.entities.Question;
 import quiz.entities.Quiz;
+import quiz.entities.Result;
 import quiz.entities.User;
 
 import java.util.ArrayList;
@@ -23,9 +24,13 @@ public class TestData implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private UserDAO userRepo;
+    @Autowired
     private QuestionDAO questionRepo;
+    @Autowired
     private QuizDAO quizRepo;
+    @Autowired
     private ResultDAO resultRepo;
+
     private java.util.List<Question> List;
 
     @Override
@@ -77,6 +82,9 @@ public class TestData implements ApplicationListener<ContextRefreshedEvent> {
         quizRepo.save(quizOne);
 
         //Results
-
+        Result resultOne = new Result();
+        resultOne.setQuiz(quizOne);
+        resultOne.setUser(userOne);
+        resultOne.setScore(1);
     }
 }

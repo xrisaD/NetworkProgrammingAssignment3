@@ -8,6 +8,10 @@
     <h1>Welcome to the quizzes!</h1>
     <p th:text="${'Hello ' + user.username + '!'}"></p>
     <p>Please choose a quiz to take:</p>
-
+    <ul th:each="quiz : ${quizzes}">
+        <li>
+            <a th:href="@{/quiz?id={quizId}(quizId = ${quiz.id})}" th:text="${quiz.subject}"></a>
+        </li>
+    </ul>
 </body>
 </html>

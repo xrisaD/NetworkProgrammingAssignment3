@@ -1,10 +1,12 @@
 package quiz;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import quiz.dao.QuestionDAO;
 import quiz.dao.QuizDAO;
 import quiz.dao.ResultDAO;
@@ -28,9 +30,24 @@ public class MyController {
         this.questionRepo = questionRepo;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("user", userRepo.findById(1).get());
+
+   @GetMapping("/login")
+    public String login(){
+        return "login";
+   }
+
+   @GetMapping("/")
+    public String home(Authentication auth, Model model) {
+        Integer principalId = ((User)auth.getPrincipal()).getId();
+        model.addAttribute("user", userRepo.findById(principalId).get()); //might be null and crash -> .orElseThrow
+        model.addAttribute("quizzes", quizRepo.findAll());
         return "index";
+    }
+
+    @GetMapping("/quiz")
+    public String quiz(Model model,
+                       @RequestParam Integer id) {
+        return "quiz";
+
     }
 }
