@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+<body>
+    <h1>Result</h1>
+
+    <article class="center">
+        <h2 th:text="${subject + ' Score: ' + score}"> </h2>
+        <form th:action="@{/}" method="get">
+            <input type="submit" value="Main Page"/>
+        </form>
+    </article>
+</body>
+</html>

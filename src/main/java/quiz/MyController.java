@@ -12,9 +12,14 @@ import quiz.dao.QuestionDAO;
 import quiz.dao.QuizDAO;
 import quiz.dao.ResultDAO;
 import quiz.dao.UserDAO;
+import quiz.entities.Question;
+import quiz.entities.Quiz;
+import quiz.entities.Result;
 import quiz.entities.User;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -42,7 +47,9 @@ public class MyController {
    @GetMapping("/")
     public String home(Authentication auth, Model model) {
         Integer principalId = ((User)auth.getPrincipal()).getId();
-        model.addAttribute("user", userRepo.findById(principalId).get()); //might be null and crash -> .orElseThrow
+        User user = userRepo.findById(principalId).get();
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("results", resultRepo.findByUser(user));
         model.addAttribute("quizzes", quizRepo.findAll());
         return "index";
     }
@@ -56,14 +63,44 @@ public class MyController {
     }
 
     @PostMapping("/quiz_submit")
-    public String quizEvaluation(Model model,
-                                 @RequestParam Integer quizId,
-                                 @RequestParam Map<String, String> params){
-        //read the params
-        System.out.println(params);
-        //check the answers
-        //quizRepo.findById();
-        //save the result
-        return "Blabla";
+    public String quizEvaluation(Authentication auth, Model model,
+                                 @RequestParam("quizId") Integer quizId,
+                                 @RequestParam("answers") List<String> answers){
+        Integer principalId = ((User)auth.getPrincipal()).getId();
+        User user = userRepo.findById(principalId).get();
+        // get the correct answers
+        Optional<Quiz> optionalQuiz = quizRepo.findById(quizId);
+        if (optionalQuiz.isPresent()) {
+            Quiz q = optionalQuiz.get();
+
+            // compute the score
+            int score = 0;
+            for (Question question: q.getQuestions()) {
+                int questionId = question.getId();
+                String[] correctAnswers = question.getAnswer().split("/");
+
+                for (int i=0; i < correctAnswers.length; i++) {
+                    if (Objects.equals(correctAnswers[i], "1") && answers.contains(questionId + "-" + i)) {
+                        score += 1;
+                    } else if (Objects.equals(correctAnswers[i], "0") && answers.contains(questionId + "-" + i)) {
+                        score -= 1;
+                    } else if (Objects.equals(correctAnswers[i], "1") && !answers.contains(questionId + "-" + i)) {
+                        score -= 1;
+                    } else if (Objects.equals(correctAnswers[i], "0") && !answers.contains(questionId + "-" + i)) {
+                        score += 1;
+                    }
+                }
+            }
+            // save it
+            resultRepo.save(new Result(score, user, q));
+
+            // show the result
+            model.addAttribute("subject", q.getSubject());
+            model.addAttribute("score", score);
+
+            return "result";
+        } else {
+            return "index";
+        }
     }
 }

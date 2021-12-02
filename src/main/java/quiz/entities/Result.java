@@ -15,9 +15,19 @@ public class Result {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quizId")
     private Quiz quiz;
+
+    public Result(Integer score, User user, Quiz quiz) {
+        this.score = score;
+        this.user = user;
+        this.quiz = quiz;
+    }
+
+    public Result() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -49,5 +59,15 @@ public class Result {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
+    }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "id=" + id +
+                ", score=" + score +
+                ", user=" + user +
+                ", quiz=" + quiz +
+                '}';
     }
 }

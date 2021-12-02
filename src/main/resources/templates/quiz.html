@@ -12,7 +12,7 @@
                 <p th:text="${question.text}"></p>
                 <ul th:each="option, optionIndex : ${question.options.split('/')}">
                     <li>
-                        <input type="checkbox" th:name="'checkedAnswer' + ${question.id} + '-' + ${optionIndex.index}" th:id="${optionIndex}"/>
+                        <input type="checkbox" th:name="answers" th:value="${question.id} + '-' + ${optionIndex.index}" th:id="${optionIndex}"/>
                         <label th:for="${optionIndex}" th:text="${option}"></label>
                     </li>
                 </ul>

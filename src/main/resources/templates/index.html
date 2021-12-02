@@ -6,12 +6,28 @@
 </head>
 <body>
     <h1>Welcome to the quizzes!</h1>
-    <p th:text="${'Hello ' + user.username + '!'}"></p>
+    <p th:text="${'Hello ' + username + '!'}"></p>
     <p>Please choose a quiz to take:</p>
     <ul th:each="quiz : ${quizzes}">
         <li>
             <a th:href="@{/quiz?id={quizId}(quizId = ${quiz.id})}" th:text="${quiz.subject}"></a>
         </li>
     </ul>
+
+    <article class="center">
+        <h2>Results</h2>
+        <table class="center_table">
+            <tr>
+                <th>Quiz subject</th>
+                <th>Score</th>
+            </tr>
+
+            <tr th:each="r : ${results}">
+                <td th:text="${r.quiz.subject}"></td>
+                <td th:text="${r.score}"></td>
+            </tr>
+
+        </table>
+    </article>
 </body>
 </html>

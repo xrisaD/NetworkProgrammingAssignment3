@@ -82,9 +82,10 @@ public class TestData implements ApplicationListener<ContextRefreshedEvent> {
         quizRepo.save(quizOne);
 
         //Results
-        Result resultOne = new Result();
-        resultOne.setQuiz(quizOne);
-        resultOne.setUser(userOne);
-        resultOne.setScore(1);
+        Result resultOne = new Result(1, userOne, quizOne);
+        Result resultTwo = new Result(10, userOne, quizOne);
+        resultRepo.save(resultOne);
+        resultRepo.save(resultTwo);
+
     }
 }
